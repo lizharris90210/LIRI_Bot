@@ -1,8 +1,8 @@
-js require('.env').config();
+require('.env').config();
 
-js var keys = require("./keys.js");
+var keys = require("./keys.js");
 
-js var spotify = new spotify(keys.spotify);
+var spotify = new spotify(keys.spotify);
 
 //    * `concert-this`
 // * `spotify-this-song`
