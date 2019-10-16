@@ -1,9 +1,3 @@
-require('.env').config();
-
-var keys = require("./keys.js");
-
-var spotify = new spotify(keys.spotify);
-
 //    * `concert-this`
 // * `spotify-this-song`
 // * `movie-this`
@@ -28,6 +22,26 @@ var spotify = new spotify(keys.spotify);
 //    * Step Two: Either login to your existing Spotify account or create a new one (a free account is fine) and log in.
 //    * Step Three: Once logged in, navigate to <https://developer.spotify.com/my-applications/#!/applications/create> to register a new application to be used with the Spotify API. You can fill in whatever you'd like for these fields. When finished, click the "complete" button.
 //    * Step Four: On the next screen, scroll down to where you see your client id and client secret. Copy these values down somewhere, you'll need them to use the Spotify API and the [node-spotify-api package](https://www.npmjs.com/package/node-spotify-api).
+require("dotenv").config();
+
+var keys = require('./keys.js');
+var Spotify = require('node-spotify-api');
+var axios = require('axios');
+var moment = require('moment');
+
+var spotify = new Spotify(keys.spotify);
+var fs = require('fs');
+
+
+function spotifySearch() {
+    spotify.search({
+        track: 'track',
+        query: song
+    }), function (err, data) {
+        
+    }
+}
+
 // 3. `node liri.js movie-this '<movie name here>'`
 //    * This will output the following information to your terminal/bash window:
 //      ```
