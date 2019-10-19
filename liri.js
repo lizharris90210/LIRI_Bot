@@ -28,20 +28,59 @@ var keys = require('./keys.js');
 var Spotify = require('node-spotify-api');
 var axios = require('axios');
 var moment = require('moment');
-
+var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 var fs = require('fs');
 
+var arg = process.argv;
+var search = arg[2];
+var nameSearch = process.argv.slice(3).join(" ");
 
-function spotifySearch() {
+var runBIT = function(){
+    URL = `https://rest.bandsintown.com/artists/${nameSearch}/events?app_id=codingbootcamp`;
+
+    axios.get(URL)
+    .then(function(response){
+
+        console.log(response.data)
+        // venue
+        // venue location
+        // date of event(mm/dd/yyyy)
+    })
+}
+
+var runSpotify = function() {
     spotify.search({
         track: 'track',
         query: song
-    }), function (err, data) {
-        
-    }
+    }), function (err, data) {}
 }
 
+spotify.search({ type:'track', query: nameSearch})
+.then(function(response){
+    console.log(response);
+})
+.catch(function(err){
+    console.log(err);
+});
+
+switch(search){
+    case 'concert':
+        runBit();
+        break;
+
+    case 'song':
+        runSpotify();
+        break;
+
+    case 'movie':
+        runOMDB();
+        break;
+
+    case 'do-what-it-says':
+        runDoinIt();
+        break;
+}
 // 3. `node liri.js movie-this '<movie name here>'`
 //    * This will output the following information to your terminal/bash window:
 //      ```
