@@ -7,122 +7,139 @@ var fs = require("fs");
 var axios = require("axios");
 var moment = require("moment");
 var spotify = new Spotify(keys.spotify);
-var reference = [];
-var arg = process.argv;
-var command = process.argv[2];
-var theSong = "";
-var theMovie = "";
-var theBand = "";
-var fileName = "log.txt";
-var fullCommand = [];
+var arg = process.argv[2];
+var command = process.argv.slice(3).join(" ");
+var concert = " ";
 
-for (var i = 3; i< arg.length; i++) {
-  reference.push(arg[1])
-}
-
-var referenceBand = reference.join("");
-fullCommand.push(command);
-if(reference.length !=0) {
-  fullCommand.push(referenceBand);
-}
-
-function logValue(value) {
-  fs.appendFile(fileName, ',' + value, function(err) {
-    if (err) {
-    return console.log("Error: " + err);
-    }
-  })
-}
-logValue(fullCommand);
-
-if (command === 'concert-this') {
-  concert(referenceBand);
-} else if (command === 'spotify-this-song') {
-  spotifySong(reference);
-} else if (command === 'movie-this') {
-  movie(reference);
-} else if (command === 'do-what-it-says') {
-  doWhatItSays();
-}
-
-function concert(referenceBand) {
-  var BITURL = "http://rest.bandsintown.com/artists/" + referenceBand + "events?app_id=codingbootcamp";
-  axios
-  .get(BITURL)
-  .then(function(BITResponse) {
-    console.log("");
-    console.log("Retrieving Artist Data for: " + referenceBand)
-      for (var i = 0; i < BITResponse.data.length; i++) {
-        var dateTime = BITResponse.data[i].dateTime;
-        var dateArray = dateTime.split('T');
-        var concertResults = "--------------------------" +
-        "\nVenue Name: " + BITResponse.data[i].venue.name +
-        "\nVenue Location: " + BITResponse.data[i].venue.city +
-        "\nDate of Event: " + moment(dateArray[0], "YYYY-DD-MM").format('DD-MM-YYYY');
-        
-        console.log(concertResults),
-
-        function(err, data) {
-          if (err) {
-            return console.log("Error: " + err);
-          }
-    
-      }
-  };
-  });
-
-  function SpotifyAPISearch(reference) {
-    if (reference.length === 0) {
-      reference = "I want it that way";
-    }
-    spotify.search(
-      {
-        type: "track",
-        query: reference
-      },
-
-      then(function(response) {
-          console.log("");
-          console.log("Spotifying " + reference);
-          console.log("------------------------------");
-            for (var i = 0; i < 5; i++) {
-              var spotifyResults = 
-              "\nArtist: " + response.tracks.items[i].artists[0].name + 
-              "\nSong: " + response.tracks.items[i].name +
-              "\nAlbum: " + response.tracks.items[i].album.name +
-              "\nPreview Link: " + response.tracks.items[i].preview_url;
-
-              console.log(spotifyResults)
-            }
-            
-      function(err, data) {
-        if (err) {
-          return console.log("Error: " + err);
-        }
-      }
-    })
+// BANDS IN TOWN CONCERTS
+function concert() {
+  if (!command) {
+    command = "Foo Fighters";
   }
-  
-  function movie(reference) {
-    if (reference.length === 0) {
-      reference = "Mr Nobody";
-    }
-  axios
-    .get('http://omdbapi.com/?t=' + reference + '&apikey=trilogy`)
-    .then(function(response) {
-      var rottenTomatoes = response.data.Ratings[1]
-      console.log
-      console.log("");
-      console.log(`Title: ${movie.data.Title}`);
-      console.log(`Released: ${movie.data.Year}`);
-      console.log(`IMDB Rating: ${movie.data.Ratings[0].Value}`);
-      console.log(`Rotten Tomatoes Rating: ${movie.data.Ratings[1].Value}`);
-      console.log(`Produced in: ${movie.data.Country}`);
-      console.log(`Plot: ${movie.data.Plot}`);
-      console.log(`Starring: ${movie.data.Actors}`);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+
+  var query = `http://rest.bandsintown.com/artists/${command}/events?app_id=codingbootcamp`;
+  axios.get(query).then(BITResponse);
+
+  var date = moment(response.data[0]);
+  var dateFormat = date.format("MM/DD/YYYY");
+
+  console.log("Concerts for: " + referenceBand);
+  var concertResults = `--------------------------\nVenue Name: ${BITResponse.data[i].venue.name} \nVenue Location: ${BITResponse.data[i].venue.city} \nDate of Event: ${dateFormat}\n------------------`;
+
+  console.log(concertResults);
+};
+
+// SPOTIFY MUSIC
+var spotifyfunc = function(error, data) {
+  error;
+  var spotifyData = `${data.tracks.items[0]}`;
+  console.log("Spotifying: " + spotifyingData);
+  console.log(
+    `----------------------\nArtist: ${spotifyingData.tracks.items[i].artists[0].name} Song: ${spotifyingData.tracks.items[i].name} Album: ${spotifyingData.tracks.items[i].album.name} Preview Link: ${spotifyingData.tracks.items[i].preview_url}\n----------------------`
+  );
+};
+
+function song() {
+  if (!command) {
+    command = "The Sign Ace of Base";
+  };
+}
+
+spotify.search(
+  {
+    type: "track",
+    query: command
+  },
+  spotifyfunc
+);
+
+function logging(data) {
+  fs.appendFile("log.txt", data, error);
+}
+
+var error = function(error) {
+  if (error) {
+    console.log(`Error ${error}`);
+  }
+};
+
+// OMDB MOVIES
+function movie() {
+  if (!command) {
+    command = "Mr Nobody";
+  };
+
+  var query = `http://omdbapi.com/?t=${command}&y=&plot=short&apikey=trilogy`;
+  axios.get(query).then(OMDBResults);
+};
+
+var OMDBResults = function(response) {
+  error;
+  var OMDBresponse = response.data;
+
+  console.log("OMDB results for: " + command);
+  console.log(`--------------------\n
+        \nTitle: ${OMDBresponse.Title}\n 
+        \nReleased: ${OMDBresponse.data.Year}\n 
+        \nRotten Tomatoes Rating: ${OMDBresponse.data.Ratings[1].Value}\n 
+        \nProduced in: ${OMDBresponse.data.Country}\n 
+        \nPlot: ${OMDBresponse.data.Plot}\n 
+        \nActors: ${OMDBresponse.data.Actors}\n
+        \n-------------------------`);
+};
+
+// // DO WHAT IT SAYS
+function doWhatItSays() {
+  fs.readFile("random.text", "utf8", doingIt);
+}
+
+var doingIt = function(error, data) {
+
+var dataSplit = data.split(",");
+var input0 = input[0];
+var input1 = input[1];
+
+switch (input0) {
+  case "concert-this":
+    concert(input1);
+    break;
+
+  case "movie-this":
+    movie(input1);
+    break;
+
+  case "spotify-this-song":
+    song(input1);
+    break;
 }
 };
+
+function switching() {
+  switch (arg) {
+    case "concert-this":
+      concert();
+      break;
+
+    case "spotify-this":
+      song();
+      break;
+
+    case "movie-this":
+      movie();
+      break;
+
+    case "do-what-it-says":
+      doingIt();
+      break;
+
+    default:
+      console.log(
+        `\nPlease use commands:
+      \nconcert-this
+      \nspotify-this-song
+      \nmovie-this
+      \ndo-what-it-says\n`
+      );
+  }
+}
+switching();
