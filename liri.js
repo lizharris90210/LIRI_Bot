@@ -17,18 +17,15 @@ var error = function(error) {
   }
 };
 
-
 // BANDS IN TOWN CONCERTS
 function concert() {
   if (!command) {
     command = "Foo Fighters";
-    console.log(concert, 'concert')
+    console.log(concert, "concert");
   }
 
   var query = `http://rest.bandsintown.com/artists/${command}/events?app_id=codingbootcamp`;
-  axios
-  .get(query)
-  .then(BITResponse);
+  axios.get(query).then(BITResponse);
 
   var BITResponse = function(response) {
     error;
@@ -36,59 +33,55 @@ function concert() {
     var dateFormat = date.format("MM/DD/YYYY");
 
     if (response.data.length <= 0) {
-      list += '\nNo dates found'
+      list += "\nNo dates found";
     } else {
       for (var i = 0; i < response.data.length; i++) {
-  console.log("Concerts for: " + command);
-  var concertResults = `--------------------------\nVenue Name: ${response.data[i].venue.name} \nVenue Location: ${response.data[i].venue.city} \nDate of Event: ${dateFormat}\n------------------`;
-        console.log(response.data)
-  console.log(concertResults);
-  }}
-}}
+        console.log("Concerts for: " + command);
+        var concertResults = `--------------------------\nVenue Name: ${response.data[i].venue.name} \nVenue Location: ${response.data[i].venue.city} \nDate of Event: ${dateFormat}\n------------------`;
+        console.log(response.data);
+        console.log(concertResults);
+      }
+    }
+  };
+}
 
 // SPOTIFY MUSIC
-var spotifyfunc = function(error, data) {
+var spotifyData = function(error, response) {
   if (error) {
-    error;
+    console.log(error, "error");
     return;
-  } 
-  console.log(JSON.parse(JSON.stringify(response), null, 2))
-
-  var spotifyData = `${response.tracks.items[0]}`;
-  console.log("Spotifying: " + spotifyingData);
-  console.log(
-    `----------------------\nArtist: ${spotifyData.tracks.items[i].artists[0].name} Song: ${spotifyData.tracks.items[i].name} Album: ${spotifyData.tracks.items[i].album.name} Preview Link: ${spotifyData.tracks.items[i].preview_url}\n----------------------`
-  );
+  } else {
+    var response = `${response.tracks.items[0]}`;
+    console.log(response, "response");
+    console.log("Spotifying: " + spotifyData);
+    console.log(
+      `----------------------
+    \nArtist: ${spotifyData.tracks.items[i].artists[0].name} 
+    \nSong: ${spotifyData.tracks.items[i].name} 
+    \nAlbum: ${spotifyData.tracks.items[i].album.name} 
+    \nPreview Link: ${spotifyData.tracks.items[i].preview_url}
+    \n----------------------`
+    );
+  }
 };
 
 function song() {
-  console.log(command, "song function working");
-
   if (!command) {
     command = "The Sign Ace of Base";
   }
-  spotify.search(
-    {
-      type: "track",
-      query: command,
-      limit: 1
-    },
 
-    function(error, data) {
-      if (error) {
-        console.log(error, "error");
-      }
-      console.log(data, "data");
-    }
-    // spotifyfunc()
-  );
+  spotify.search({
+    type: "track",
+    query: command,
+    limit: 1
+  });
 }
+spotifyData();
 
 function logging(command) {
   fs.appendFile("log.txt", data, error);
-  console.log('logging to .txt')
+  console.log("logging to .txt");
 }
-
 
 // OMDB MOVIES
 function movie() {
@@ -120,11 +113,11 @@ function doWhatItSays() {
   fs.readFile("random.text", "utf8", doingIt);
 }
 
-var doingIt = function(arg, command) {
+var doingIt = function(command, data) {
   error;
-  // var dataSplit = data.split(',');
-  // var arg = input[0];
-  // var command = input[1];
+  var arg = command[0];
+  var command = command[1];
+  var dataSplit = data.split(" , ");
 
   switch (arg) {
     case "concert-this":
@@ -144,7 +137,6 @@ doWhatItSays();
 
 function switching() {
   switch (arg) {
-
     case "concert-this":
       concert();
       break;
@@ -163,7 +155,7 @@ function switching() {
 
     default:
       console.log(
-      `\nPlease use commands:
+        `\nPlease use commands:
       \nconcert-this
       \nspotify-this-song
       \nmovie-this
