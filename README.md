@@ -28,9 +28,15 @@ In terminal, type 'node liri.js' and one of the following commands, followed by 
 
 - `concert-this` (searches the Bands in Town Artist Events API for venue, location, and date)
 
+concert-this.mov
+
 - `spotify-this-song` (searches the Spotify Artists API for artist, song name, preview link, and album)
 
+spotify-this.mov
+
 - `movie-this` (searches OMDB API for movie information, including title, year, rating, Rotten Tomatoes rating, country of production, language, plot, and actors)
+
+OMDBScreenRecord.mov
 
 - `do-what-it-says` (uses fs Node package to run 'spotify-this-song' into file random.txt)
 
